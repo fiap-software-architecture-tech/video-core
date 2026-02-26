@@ -8,3 +8,5 @@ reports
 .idea/
 .docker
 test-report
+
+/src/generated/prisma

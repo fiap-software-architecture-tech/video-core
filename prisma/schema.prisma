@@ -1,0 +1,40 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+    PENDING
+    PROCESSING
+    DONE
+    ERROR
+}
+
+model User {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    password  String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("users")
+}
+
+model Job {
+    id               String    @id @default(uuid())
+    status           JobStatus @default(PENDING)
+    originalFileName String    @map("original_file_name")
+    originalVideoKey String?   @map("original_video_key")
+    zipKey           String?   @map("zip_key")
+    frameCount       Int?      @map("frame_count")
+    errorMessage     String?   @map("error_message")
+    createdAt        DateTime  @default(now()) @map("created_at")
+    updatedAt        DateTime  @updatedAt @map("updated_at")
+
+    @@index([status])
+    @@map("jobs")
+}
