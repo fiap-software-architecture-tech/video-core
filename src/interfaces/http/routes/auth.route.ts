@@ -13,4 +13,9 @@ export const authRoute = (app: FastifyInstance) => {
         const response = await controller.register(req.body);
         return reply.status(StatusCodes.CREATED).send(response);
     });
+
+    app.post<{ Body: AuthRequest }>('/login', async (req, reply) => {
+        const response = await controller.login(req.body);
+        return reply.status(StatusCodes.OK).send(response);
+    });
 };

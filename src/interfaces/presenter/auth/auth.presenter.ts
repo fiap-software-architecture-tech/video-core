@@ -1,11 +1,11 @@
-import { User } from '#/domain/entities/user';
+import { TokenResult } from '#/domain/services/token-generator.service';
 import { AuthResponse } from '#/interfaces/http/schemas/auth/auth-response.schema';
 
 export class AuthPresenter {
-    static toHTTP(user: User): AuthResponse {
+    static toHTTP(data: TokenResult): AuthResponse {
         return {
-            id: user.id,
-            email: user.email,
+            token: data.token,
+            expiresIn: data.expiresIn,
         };
     }
 }
