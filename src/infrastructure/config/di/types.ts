@@ -6,7 +6,10 @@ export const TYPES = {
     UserRepository: Symbol.for('UserRepository'),
 
     // UseCases
-    Register: Symbol.for('Register'),
+    RegisterUseCase: Symbol.for('RegisterUseCase'),
+
+    // Controllers
+    AuthController: Symbol.for('AuthController'),
 
     // Services
     HashService: Symbol.for('HashService'),

@@ -6,7 +6,7 @@ import { IUserRepository } from '#/domain/repositories/user.repository';
 import { IHashService } from '#/domain/services/hash.service';
 import { ILogger } from '#/domain/services/logger.service';
 import { TYPES } from '#/infrastructure/config/di/types';
-import { RegisterRequest } from '#/interfaces/http/schemas/auth/auth-request.schema';
+import { RegisterRequest } from '#/interfaces/http/schemas/user/user-request.schema';
 
 @injectable()
 export class Register {
