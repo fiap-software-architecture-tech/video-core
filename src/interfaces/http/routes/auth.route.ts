@@ -1,5 +1,16 @@
 import { FastifyInstance } from 'fastify';
+import { StatusCodes } from 'http-status-codes';
+
+import { TYPES } from '#/infrastructure/config/di/types';
+import { AuthController } from '#/interfaces/controller/auth.controller';
+import { AuthRequest } from '#/interfaces/http/schemas/auth/auth-request.schema';
+import { registerSchema } from '#/interfaces/http/schemas/auth/auth-route.schema';
 
 export const authRoute = (app: FastifyInstance) => {
-    // const controller = app.container.get<AuthController>(TYPES.AuthController);
+    const controller = app.container.get<AuthController>(TYPES.AuthController);
+
+    app.post<{ Body: AuthRequest }>('/register', registerSchema, async (req, reply) => {
+        const response = await controller.register(req.body);
+        return reply.status(StatusCodes.CREATED).send(response);
+    });
 };

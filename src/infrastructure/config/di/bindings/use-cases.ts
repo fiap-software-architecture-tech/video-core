@@ -5,5 +5,5 @@ import { IRegisterUseCase } from '#/application/use-cases/auth/register/register
 import { TYPES } from '#/infrastructure/config/di/types';
 
 export function bindUseCases(container: Container) {
-    container.bind<IRegisterUseCase>(TYPES.Register).to(Register).inTransientScope();
+    container.bind<IRegisterUseCase>(TYPES.RegisterUseCase).to(Register).inTransientScope();
 }

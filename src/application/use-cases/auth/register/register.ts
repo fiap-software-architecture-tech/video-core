@@ -6,7 +6,7 @@ import { IUserRepository } from '#/domain/repositories/user.repository';
 import { IHashService } from '#/domain/services/hash.service';
 import { ILogger } from '#/domain/services/logger.service';
 import { TYPES } from '#/infrastructure/config/di/types';
-import { RegisterRequest } from '#/interfaces/http/schemas/user/user-request.schema';
+import { AuthRequest } from '#/interfaces/http/schemas/auth/auth-request.schema';
 
 @injectable()
 export class Register {
@@ -16,7 +16,7 @@ export class Register {
         @inject(TYPES.UserRepository) private readonly userRepository: IUserRepository,
     ) {}
 
-    async execute(request: RegisterRequest): Promise<User> {
+    async execute(request: AuthRequest): Promise<User> {
         this.logger.info('Registering new user', { email: request.email });
 
         const existingUser = await this.userRepository.findByEmail(request.email);
