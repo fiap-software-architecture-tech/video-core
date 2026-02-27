@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { TYPES } from '#/infrastructure/config/di/types';
 import { AuthController } from '#/interfaces/controller/auth.controller';
 import { AuthRequest } from '#/interfaces/http/schemas/auth/auth-request.schema';
-import { registerSchema } from '#/interfaces/http/schemas/auth/auth-route.schema';
+import { loginSchema, registerSchema } from '#/interfaces/http/schemas/auth/auth-route.schema';
 
 export const authRoute = (app: FastifyInstance) => {
     const controller = app.container.get<AuthController>(TYPES.AuthController);
@@ -14,7 +14,7 @@ export const authRoute = (app: FastifyInstance) => {
         return reply.status(StatusCodes.CREATED).send(response);
     });
 
-    app.post<{ Body: AuthRequest }>('/login', async (req, reply) => {
+    app.post<{ Body: AuthRequest }>('/login', loginSchema, async (req, reply) => {
         const response = await controller.login(req.body);
         return reply.status(StatusCodes.OK).send(response);
     });

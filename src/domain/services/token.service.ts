@@ -1,3 +1,5 @@
+import { JwtPayload } from 'jsonwebtoken';
+
 import { User } from '#/domain/entities/user';
 
 export interface TokenResult {
@@ -5,6 +7,7 @@ export interface TokenResult {
     expiresIn: string;
 }
 
-export interface ITokenGeneratorService {
+export interface ITokenService {
     sign(user: User): TokenResult;
+    verify(token: string): JwtPayload;
 }

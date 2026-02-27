@@ -35,6 +35,10 @@ export const businessErrorSchema = baseErrorSchema.extend({
     error: z.literal('Business Error'),
 });
 
+export const unauthorizedErrorSchema = baseErrorSchema.extend({
+    error: z.literal('Unauthorized'),
+});
+
 export const internalServerErrorSchema = baseErrorSchema.extend({
     error: z.literal('Internal Server Error'),
 });
@@ -43,4 +47,5 @@ export type BadRequestError = z.infer<typeof badRequestSchema>;
 export type NotFoundError = z.infer<typeof notFoundSchema>;
 export type ConflictError = z.infer<typeof conflictErrorSchema>;
 export type BusinessError = z.infer<typeof businessErrorSchema>;
+export type UnauthorizedError = z.infer<typeof unauthorizedErrorSchema>;
 export type InternalServerError = z.infer<typeof internalServerErrorSchema>;

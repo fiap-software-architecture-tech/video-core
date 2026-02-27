@@ -1,4 +1,4 @@
-import { TokenResult } from '#/domain/services/token-generator.service';
+import { TokenResult } from '#/domain/services/token.service';
 import { AuthResponse } from '#/interfaces/http/schemas/auth/auth-response.schema';
 
 export class AuthPresenter {

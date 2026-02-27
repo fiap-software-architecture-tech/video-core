@@ -14,6 +14,6 @@ export const TYPES = {
 
     // Services
     HashService: Symbol.for('HashService'),
-    TokenGeneratorService: Symbol.for('TokenGeneratorService'),
+    TokenService: Symbol.for('TokenService'),
     Logger: Symbol.for('Logger'),
 };
