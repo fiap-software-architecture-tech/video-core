@@ -8,9 +8,11 @@ export const TYPES = {
     // UseCases
     RegisterUseCase: Symbol.for('RegisterUseCase'),
     LoginUseCase: Symbol.for('LoginUseCase'),
+    VideoUploadUseCase: Symbol.for('VideoUploadUseCase'),
 
     // Controllers
     AuthController: Symbol.for('AuthController'),
+    VideoController: Symbol.for('VideoController'),
 
     // Services
     HashService: Symbol.for('HashService'),
