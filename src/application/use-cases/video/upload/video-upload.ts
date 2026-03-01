@@ -7,6 +7,7 @@ import { IVideoUploadUseCase } from '#/application/use-cases/video/upload/video-
 import { Job } from '#/domain/entities/job';
 import { IJobRepository } from '#/domain/repositories/job.repository';
 import { ILogger } from '#/domain/services/logger.service';
+import { IQueueProviderService } from '#/domain/services/queue-provider.service';
 import { IStorageService } from '#/domain/services/storage.service';
 import { TYPES } from '#/infrastructure/config/di/types';
 import { VideoUploadRequest } from '#/interfaces/http/schemas/video/video-request.schema';
@@ -17,6 +18,7 @@ export class VideoUpload implements IVideoUploadUseCase {
         @inject(TYPES.Logger) private readonly logger: ILogger,
         @inject(TYPES.StorageService) private readonly storageService: IStorageService,
         @inject(TYPES.JobRepository) private readonly jobRepository: IJobRepository,
+        @inject(TYPES.QueueProviderService) private readonly queueProviderService: IQueueProviderService,
     ) {}
 
     async execute(request: VideoUploadRequest): Promise<Job> {
@@ -39,6 +41,11 @@ export class VideoUpload implements IVideoUploadUseCase {
         });
 
         const jobCreated = await this.jobRepository.create(job);
+
+        await this.queueProviderService.send({
+            jobId: jobCreated.id,
+            key,
+        });
 
         this.logger.info('Video uploaded successfully');
 

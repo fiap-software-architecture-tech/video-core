@@ -20,5 +20,6 @@ export const TYPES = {
     HashService: Symbol.for('HashService'),
     TokenService: Symbol.for('TokenService'),
     StorageService: Symbol.for('StorageService'),
+    QueueProviderService: Symbol.for('QueueProviderService'),
     Logger: Symbol.for('Logger'),
 };
