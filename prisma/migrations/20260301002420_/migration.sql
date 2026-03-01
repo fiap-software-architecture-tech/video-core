@@ -13,7 +13,7 @@ CREATE TABLE `users` (
 -- CreateTable
 CREATE TABLE `jobs` (
     `id` VARCHAR(191) NOT NULL,
-    `status` ENUM('PENDING', 'PROCESSING', 'DONE', 'ERROR') NOT NULL DEFAULT 'PENDING',
+    `status` ENUM('PROCESSING', 'DONE', 'ERROR') NOT NULL DEFAULT 'PROCESSING',
     `original_file_name` VARCHAR(191) NOT NULL,
     `original_video_key` VARCHAR(191) NULL,
     `zip_key` VARCHAR(191) NULL,

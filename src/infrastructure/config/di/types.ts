@@ -4,6 +4,7 @@ export const TYPES = {
 
     // Repositories
     UserRepository: Symbol.for('UserRepository'),
+    JobRepository: Symbol.for('JobRepository'),
 
     // UseCases
     RegisterUseCase: Symbol.for('RegisterUseCase'),

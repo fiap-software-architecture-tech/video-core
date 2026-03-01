@@ -1,5 +1,5 @@
 import { authRequestSchema } from '#/interfaces/http/schemas/auth/auth-request.schema';
-import { authResponseSchema } from '#/interfaces/http/schemas/auth/auth-response.schema';
+import { authResponseSchema, userResponseSchema } from '#/interfaces/http/schemas/auth/auth-response.schema';
 import {
     badRequestSchema,
     conflictErrorSchema,
@@ -12,7 +12,7 @@ export const registerSchema = {
         summary: 'Registrar usuário',
         body: authRequestSchema,
         response: {
-            201: authResponseSchema,
+            201: userResponseSchema,
             400: badRequestSchema,
             409: conflictErrorSchema,
         },

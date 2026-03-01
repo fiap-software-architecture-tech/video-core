@@ -2,12 +2,13 @@ import { PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 
 import { User } from '#/domain/entities/user';
+import { IUserRepository } from '#/domain/repositories/user.repository';
 import { ILogger } from '#/domain/services/logger.service';
 import { TYPES } from '#/infrastructure/config/di/types';
 import { PrismaUserMapper } from '#/infrastructure/repositories/prisma/mappers/prisma-user.mapper';
 
 @injectable()
-export class PrismaUserRepository {
+export class PrismaUserRepository implements IUserRepository {
     constructor(
         @inject(TYPES.Logger) private readonly logger: ILogger,
         @inject(TYPES.PrismaClient) private readonly prisma: PrismaClient,
@@ -15,12 +16,12 @@ export class PrismaUserRepository {
 
     async create(user: User): Promise<User> {
         try {
-            this.logger.debug('Creating user in database', { email: user.email });
+            this.logger.info('Creating user in database', { email: user.email });
             const data = await this.prisma.user.create({
                 data: PrismaUserMapper.toCreate(user),
             });
             const result = PrismaUserMapper.toDomain(data);
-            this.logger.debug('User created in database', { userId: result.id });
+            this.logger.info('User created in database', { userId: result.id });
             return result;
         } catch (error) {
             this.logger.error('Failed to create user in database', error as Error, { email: user.email });

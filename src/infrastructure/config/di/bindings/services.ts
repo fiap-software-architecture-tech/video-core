@@ -2,7 +2,7 @@ import { Container } from 'inversify';
 
 import { IHashService } from '#/domain/services/hash.service';
 import { ILogger } from '#/domain/services/logger.service';
-import { StorageService } from '#/domain/services/storage.service';
+import { IStorageService } from '#/domain/services/storage.service';
 import { ITokenService } from '#/domain/services/token.service';
 import { TYPES } from '#/infrastructure/config/di/types';
 import { createPinoLogger } from '#/infrastructure/config/logger';
@@ -14,7 +14,7 @@ import { S3StorageService } from '#/infrastructure/services/s3/s3-storage.servic
 export function bindServices(container: Container) {
     container.bind<IHashService>(TYPES.HashService).to(BcryptHashService).inSingletonScope();
     container.bind<ITokenService>(TYPES.TokenService).to(JwtTokenService).inSingletonScope();
-    container.bind<StorageService>(TYPES.StorageService).to(S3StorageService).inSingletonScope();
+    container.bind<IStorageService>(TYPES.StorageService).to(S3StorageService).inSingletonScope();
 
     container
         .bind<ILogger>(TYPES.Logger)

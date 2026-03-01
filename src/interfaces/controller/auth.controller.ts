@@ -20,6 +20,7 @@ export class AuthController {
     async register(request: AuthRequest): Promise<UserResponse> {
         this.logger.info('Registering a new user', { email: request.email });
         const response = await this.registerUseCase.execute(request);
+        console.log(response);
         return UserPresenter.toHTTP(response);
     }
 
