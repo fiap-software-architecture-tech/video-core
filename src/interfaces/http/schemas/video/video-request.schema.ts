@@ -14,4 +14,9 @@ export const videoUploadRequestSchema = z.object({
     stream: z.any(),
 });
 
+export const videoQueryRequestSchema = z.object({
+    status: z.enum(['processing', 'done', 'error']).optional(),
+});
+
 export type VideoUploadRequest = z.infer<typeof videoUploadRequestSchema>;
+export type VideoQueryRequest = z.infer<typeof videoQueryRequestSchema>;

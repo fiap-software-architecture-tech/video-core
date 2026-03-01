@@ -1,7 +1,16 @@
+import { Job } from '#/domain/entities/job';
+import { VideoResponse } from '#/interfaces/http/schemas/video/video-response.schema';
+
 export class VideoPresenter {
-    static toHTTP(response: any): any {
+    static toHTTP(job: Job): VideoResponse {
         return {
-            response,
+            id: job.id,
+            originalFileName: job.originalFileName,
+            originalVideoKey: job.originalVideoKey,
+            status: job.status ?? '',
+            zipKey: job.zipKey ?? null,
+            frameCount: job.frameCount ?? null,
+            errorMessage: job.errorMessage ?? null,
         };
     }
 }

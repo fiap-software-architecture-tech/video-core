@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { JobStatus, PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 
 import { Job } from '#/domain/entities/job';
@@ -6,6 +6,7 @@ import { IJobRepository } from '#/domain/repositories/job.repository';
 import { ILogger } from '#/domain/services/logger.service';
 import { TYPES } from '#/infrastructure/config/di/types';
 import { PrismaJobMapper } from '#/infrastructure/repositories/prisma/mappers/prisma-job.mapper';
+import { VideoQueryRequest } from '#/interfaces/http/schemas/video/video-request.schema';
 
 @injectable()
 export class PrismaJobRepository implements IJobRepository {
@@ -31,7 +32,14 @@ export class PrismaJobRepository implements IJobRepository {
         }
     }
 
-    list(): Promise<Job[]> {
-        throw new Error('Method not implemented.');
+    async list(query: VideoQueryRequest): Promise<Job[]> {
+        this.logger.info('Listing jobs from database', { query });
+        const data = await this.prisma.job.findMany({
+            where: {
+                ...(query.status ? { status: query.status.toUpperCase() as JobStatus } : {}),
+            },
+        });
+        this.logger.info('Jobs retrieved from database', { count: data.length });
+        return data.map(item => PrismaJobMapper.toDomain(item));
     }
 }

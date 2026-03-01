@@ -19,8 +19,8 @@ export class VideoUpload implements IVideoUploadUseCase {
         @inject(TYPES.JobRepository) private readonly jobRepository: IJobRepository,
     ) {}
 
-    async execute(request: VideoUploadRequest): Promise<void> {
-        this.logger.info('Executing video upload use case');
+    async execute(request: VideoUploadRequest): Promise<Job> {
+        this.logger.info('Executing video upload use case', { fileName: request.fileName });
 
         const extension = request.fileName.split('.').pop();
         const key = `processing/${randomUUID()}.${extension}`;
@@ -38,7 +38,11 @@ export class VideoUpload implements IVideoUploadUseCase {
             originalVideoKey: key,
         });
 
-        await this.jobRepository.create(job);
+        const jobCreated = await this.jobRepository.create(job);
+
+        this.logger.info('Video uploaded successfully');
+
+        return jobCreated;
     }
 
     private streamToBuffer(stream: Readable): Promise<Buffer> {

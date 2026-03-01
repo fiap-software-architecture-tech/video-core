@@ -4,14 +4,15 @@ import { StatusCodes } from 'http-status-codes';
 import { TYPES } from '#/infrastructure/config/di/types';
 import { VideoController } from '#/interfaces/controller/video.controller';
 import { authMiddleware } from '#/interfaces/http/middlewares/auth.middleware';
-import { videoUploadRequestSchema } from '#/interfaces/http/schemas/video/video-request.schema';
+import { VideoQueryRequest, videoUploadRequestSchema } from '#/interfaces/http/schemas/video/video-request.schema';
+import { videoListSchema, videoUploadSchema } from '#/interfaces/http/schemas/video/video-route.schema';
 
 export const videoRoute = (app: FastifyInstance) => {
     const controller = app.container.get<VideoController>(TYPES.VideoController);
 
     app.addHook('onRequest', authMiddleware);
 
-    app.post('/upload', async (req, reply) => {
+    app.post('/upload', videoUploadSchema, async (req, reply) => {
         const file = await req.file();
 
         if (!file) {
@@ -27,5 +28,10 @@ export const videoRoute = (app: FastifyInstance) => {
 
         const response = await controller.upload(dto);
         return reply.status(StatusCodes.OK).send(response);
+    });
+
+    app.get<{ Querystring: VideoQueryRequest }>('/', videoListSchema, async (req, reply) => {
+        const videos = await controller.list(req.query);
+        return reply.status(StatusCodes.OK).send(videos);
     });
 };

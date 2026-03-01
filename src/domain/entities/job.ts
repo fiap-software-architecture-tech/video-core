@@ -4,7 +4,7 @@ export type JobPayload = {
     originalVideoKey: string;
     status?: string;
     zipKey?: string;
-    frameCount?: string;
+    frameCount?: number;
     errorMessage?: string;
 };
 
@@ -14,7 +14,7 @@ export class Job {
     public originalVideoKey: string;
     public status?: string;
     public zipKey?: string;
-    public frameCount?: string;
+    public frameCount?: number;
     public errorMessage?: string;
 
     constructor(payload: JobPayload) {
