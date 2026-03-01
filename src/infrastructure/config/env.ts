@@ -6,6 +6,10 @@ const envSchema = z.object({
 
     JWT_SECRET: z.string(),
     JWT_EXPIRES_IN: z.string(),
+
+    AWS_REGION: z.string(),
+    AWS_ENDPOINT: z.string(),
+    AWS_BUCKET_NAME: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

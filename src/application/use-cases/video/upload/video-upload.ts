@@ -1,35 +1,42 @@
 import { randomUUID } from 'crypto';
-import { createWriteStream, promises } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { pipeline } from 'stream/promises';
+import { Readable } from 'stream';
 
-import { MultipartFile } from '@fastify/multipart';
 import { inject, injectable } from 'inversify';
 
 import { IVideoUploadUseCase } from '#/application/use-cases/video/upload/video-upload.use-case';
 import { ILogger } from '#/domain/services/logger.service';
+import { StorageService } from '#/domain/services/storage.service';
 import { TYPES } from '#/infrastructure/config/di/types';
+import { VideoUploadRequest } from '#/interfaces/http/schemas/video/video-request.schema';
 
 @injectable()
 export class VideoUpload implements IVideoUploadUseCase {
-    constructor(@inject(TYPES.Logger) private readonly logger: ILogger) {}
+    constructor(
+        @inject(TYPES.Logger) private readonly logger: ILogger,
+        @inject(TYPES.StorageService) private readonly storageService: StorageService,
+    ) {}
 
-    async execute(file: MultipartFile): Promise<any> {
+    async execute(request: VideoUploadRequest): Promise<void> {
         this.logger.info('Executing video upload use case');
 
-        const ext = file.filename.slice(file.filename.lastIndexOf('.')).toLowerCase();
+        const extension = request.fileName.split('.').pop();
+        const uniqueName = `${randomUUID()}.${extension}`;
 
-        const tmpPath = join(tmpdir(), `${randomUUID()}${ext}`);
-        try {
-            await pipeline(file.file, createWriteStream(tmpPath));
+        const buffer = await this.streamToBuffer(request.stream);
 
-            this.logger.info('Saving uploaded file to temporary path', { tmpPath });
-        } catch (error) {
-            this.logger.error('Error uploading video', error as Error);
-            throw new Error('Failed to upload video');
-        } finally {
-            await promises.unlink(tmpPath).catch(() => {});
-        }
+        await this.storageService.upload({
+            key: `processing/${uniqueName}`,
+            body: buffer,
+            contentType: request.mimetype,
+        });
+    }
+
+    private streamToBuffer(stream: Readable): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            const chunks: Buffer[] = [];
+            stream.on('data', chunk => chunks.push(Buffer.from(chunk)));
+            stream.on('end', () => resolve(Buffer.concat(chunks)));
+            stream.on('error', reject);
+        });
     }
 }

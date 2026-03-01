@@ -18,17 +18,14 @@ export const videoRoute = (app: FastifyInstance) => {
             return reply.status(StatusCodes.BAD_REQUEST).send({ error: 'File is required' });
         }
 
-        const validation = videoUploadRequestSchema.safeParse({
+        const dto = videoUploadRequestSchema.parse({
+            fileName: file.filename,
             mimetype: file.mimetype,
             fileSize: file.file.bytesRead,
-            file: file.file,
+            stream: file.file,
         });
-        if (!validation.success) {
-            console.log(JSON.stringify(validation.error, null, '\t'));
-            return reply.status(StatusCodes.BAD_REQUEST).send({ error: validation.error.errors[0].message });
-        }
 
-        const response = await controller.upload(file);
+        const response = await controller.upload(dto);
         return reply.status(StatusCodes.OK).send(response);
     });
 };

@@ -1,5 +1,5 @@
-import { MultipartFile } from '@fastify/multipart';
+import { VideoUploadRequest } from '#/interfaces/http/schemas/video/video-request.schema';
 
 export interface IVideoUploadUseCase {
-    execute(file: MultipartFile): Promise<any>;
+    execute(request: VideoUploadRequest): Promise<any>;
 }

@@ -10,10 +10,10 @@ export const videoUploadSchema = {
             },
             required: ['file'],
         },
-        response: {
-            200: videoUploadResponseSchema,
-            400: badRequestSchema,
-            401: unauthorizedSchema,
-        },
+        // response: {
+        //     200: videoUploadResponseSchema,
+        //     400: badRequestSchema,
+        //     401: unauthorizedSchema,
+        // },
     },
 };
