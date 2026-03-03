@@ -5,6 +5,7 @@ import { inject, injectable } from 'inversify';
 
 import { IVideoUploadUseCase } from '#/application/use-cases/video/upload/video-upload.use-case';
 import { Job } from '#/domain/entities/job';
+import { EventType } from '#/domain/enum/event-type';
 import { IJobRepository } from '#/domain/repositories/job.repository';
 import { ILogger } from '#/domain/services/logger.service';
 import { IQueueProviderService } from '#/domain/services/queue-provider.service';
@@ -45,6 +46,7 @@ export class VideoUpload implements IVideoUploadUseCase {
         await this.queueProviderService.send({
             jobId: jobCreated.id,
             key,
+            eventType: EventType.PROCESSING,
         });
 
         this.logger.info('Video uploaded successfully');

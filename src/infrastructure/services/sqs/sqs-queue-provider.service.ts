@@ -23,6 +23,12 @@ export class SQSQueueProviderService implements IQueueProviderService {
             new SendMessageCommand({
                 QueueUrl: env.AWS_SQS_URL,
                 MessageBody: JSON.stringify(message),
+                MessageAttributes: {
+                    eventType: {
+                        DataType: 'String',
+                        StringValue: message.eventType,
+                    },
+                },
             }),
         );
     }
