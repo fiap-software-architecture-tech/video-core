@@ -4,6 +4,7 @@ const ALLOWED_MIME_TYPES = ['video/mp4', 'video/avi', 'video/quicktime', 'video/
 const MAX_FILE_SIZE = 500 * 1024 * 1024;
 
 export const videoUploadRequestSchema = z.object({
+    userId: z.string().uuid(),
     fileName: z.string(),
     mimetype: z.string().refine(type => ALLOWED_MIME_TYPES.includes(type as any), {
         message: `Invalid file type. Allowed types are: ${ALLOWED_MIME_TYPES.join(', ')}`,

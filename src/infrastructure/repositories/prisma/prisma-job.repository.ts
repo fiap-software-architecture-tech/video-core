@@ -20,6 +20,9 @@ export class PrismaJobRepository implements IJobRepository {
             this.logger.info('Creating job in database', { originalFileName: job.originalFileName });
             const data = await this.prisma.job.create({
                 data: PrismaJobMapper.toCreate(job),
+                include: {
+                    user: true,
+                },
             });
             const result = PrismaJobMapper.toDomain(data);
             this.logger.info('Job created in database', { jobId: result.id });
@@ -37,6 +40,9 @@ export class PrismaJobRepository implements IJobRepository {
         const data = await this.prisma.job.findMany({
             where: {
                 ...(query.status ? { status: query.status.toUpperCase() as JobStatus } : {}),
+            },
+            include: {
+                user: true,
             },
         });
         this.logger.info('Jobs retrieved from database', { count: data.length });

@@ -8,6 +8,10 @@ export const videoResponseSchema = z.object({
     zipKey: z.string().nullable(),
     frameCount: z.number().nullable(),
     errorMessage: z.string().nullable(),
+    user: z.object({
+        id: z.string().uuid(),
+        email: z.string(),
+    }),
 });
 
 export type VideoResponse = z.infer<typeof videoResponseSchema>;

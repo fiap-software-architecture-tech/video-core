@@ -19,7 +19,10 @@ export const videoRoute = (app: FastifyInstance) => {
             return reply.status(StatusCodes.BAD_REQUEST).send({ error: 'File is required' });
         }
 
+        const { id: userId } = req.user as { id: string };
+
         const dto = videoUploadRequestSchema.parse({
+            userId,
             fileName: file.filename,
             mimetype: file.mimetype,
             fileSize: file.file.bytesRead,

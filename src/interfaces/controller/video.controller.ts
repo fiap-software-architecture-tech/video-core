@@ -19,6 +19,7 @@ export class VideoController {
     async upload(request: VideoUploadRequest): Promise<VideoResponse> {
         this.logger.info('Uploading video', { file: request.fileName });
         const response = await this.videoUploadUseCase.execute(request);
+        console.log('Video upload response:', response);
         return VideoPresenter.toHTTP(response);
     }
 

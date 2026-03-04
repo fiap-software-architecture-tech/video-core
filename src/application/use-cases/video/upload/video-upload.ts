@@ -37,6 +37,7 @@ export class VideoUpload implements IVideoUploadUseCase {
         });
 
         const job = new Job({
+            userId: request.userId,
             originalFileName: request.fileName,
             originalVideoKey: key,
         });
