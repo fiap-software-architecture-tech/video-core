@@ -10,9 +10,9 @@ NOCOLOR="\033[0m"
 echo -e "${GREEN}Creating resources${NOCOLOR}"
 echo
 
-echo -e "${YELLOW}Creating SQS: ${NOCOLOR} video-events"
+echo -e "${YELLOW}Creating SQS: ${NOCOLOR} video-processing-queue"
 aws sqs --endpoint-url=http://localhost:4566 --region=us-east-1 create-queue \
-    --queue-name video-events | tee > /dev/null 2>&1
+    --queue-name video-processing-queue | tee > /dev/null 2>&1
 
 echo -e "${YELLOW}Creating S3: ${NOCOLOR} video-bucket"
 aws s3 --endpoint-url=http://localhost:4566 --region=us-east-1 \
