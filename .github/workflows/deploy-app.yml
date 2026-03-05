@@ -1,0 +1,141 @@
+name: 🚀 Deploy Application
+
+on:
+  workflow_dispatch:
+    inputs:
+      ecr_repository_url:
+        description: 'ECR Repository URL (from Terraform outputs)'
+        required: true
+        type: string
+      ecr_repository_name:
+        description: 'ECR Repository Name (from Terraform outputs)'
+        required: true
+        type: string
+      ecs_cluster_name:
+        description: 'ECS Cluster Name (from Terraform outputs)'
+        required: true
+        type: string
+      ecs_service_name:
+        description: 'ECS Service Name (from Terraform outputs)'
+        required: true
+        type: string
+  
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'prisma/**'
+      - 'scripts/**'
+      - 'Dockerfile'
+      - 'package*.json'
+      - '.github/workflows/deploy-app.yml'
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 📦 Set deployment variables
+        id: vars
+        run: |
+          IMAGE_TAG="${GITHUB_SHA:0:7}"
+          
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Triggered manually with inputs
+            ECR_URL="${{ inputs.ecr_repository_url }}"
+            ECR_NAME="${{ inputs.ecr_repository_name }}"
+            ECS_CLUSTER="${{ inputs.ecs_cluster_name }}"
+            ECS_SERVICE="${{ inputs.ecs_service_name }}"
+            TRIGGER="manual"
+          else
+            # Triggered by push - use default values from secrets/vars
+            ECR_URL="${{ vars.ECR_REPOSITORY_URL || secrets.ECR_REPOSITORY_URL }}"
+            ECR_NAME="${{ vars.ECR_REPOSITORY_NAME || secrets.ECR_REPOSITORY_NAME }}"
+            ECS_CLUSTER="${{ vars.ECS_CLUSTER_NAME || secrets.ECS_CLUSTER_NAME }}"
+            ECS_SERVICE="${{ vars.ECS_SERVICE_NAME || secrets.ECS_SERVICE_NAME }}"
+            TRIGGER="push"
+            
+            # Validate that variables are set
+            if [ -z "$ECR_URL" ] || [ -z "$ECR_NAME" ] || [ -z "$ECS_CLUSTER" ] || [ -z "$ECS_SERVICE" ]; then
+              echo "❌ ERROR: Missing required variables!"
+              echo ""
+              echo "For push-triggered deployments, configure these in GitHub:"
+              echo "Settings → Secrets and variables → Actions → Variables"
+              echo ""
+              echo "Required Variables:"
+              echo "  - ECR_REPOSITORY_URL"
+              echo "  - ECR_REPOSITORY_NAME"
+              echo "  - ECS_CLUSTER_NAME"
+              echo "  - ECS_SERVICE_NAME"
+              echo ""
+              echo "Get these values from the video-infra repository Terraform outputs."
+              exit 1
+            fi
+          fi
+          
+          echo "ecr_url=$ECR_URL" >> $GITHUB_OUTPUT
+          echo "ecr_name=$ECR_NAME" >> $GITHUB_OUTPUT
+          echo "ecs_cluster=$ECS_CLUSTER" >> $GITHUB_OUTPUT
+          echo "ecs_service=$ECS_SERVICE" >> $GITHUB_OUTPUT
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "trigger=$TRIGGER" >> $GITHUB_OUTPUT
+          
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🚀 Deployment Configuration"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📦 ECR URL:     $ECR_URL"
+          echo "🏷️  ECR Name:    $ECR_NAME"
+          echo "🔖 Image Tag:   $IMAGE_TAG"
+          echo "🎯 Cluster:     $ECS_CLUSTER"
+          echo "🚀 Service:     $ECS_SERVICE"
+          echo "🎬 Triggered:   $TRIGGER"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+      - name: 🔨 Build and Push Docker Image
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          ECR_REPOSITORY_URL: ${{ steps.vars.outputs.ecr_url }}
+          ECR_REPOSITORY_NAME: ${{ steps.vars.outputs.ecr_name }}
+          IMAGE_TAG: ${{ steps.vars.outputs.image_tag }}
+        run: |
+          chmod +x scripts/build-and-push.sh
+          ./scripts/build-and-push.sh
+
+      - name: 🚀 Deploy to ECS
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          ECS_CLUSTER_NAME: ${{ steps.vars.outputs.ecs_cluster }}
+          ECS_SERVICE_NAME: ${{ steps.vars.outputs.ecs_service }}
+          IMAGE_TAG: ${{ steps.vars.outputs.image_tag }}
+        run: |
+          chmod +x scripts/deploy-ecs.sh
+          ./scripts/deploy-ecs.sh
+
+      - name: 🎉 Deployment Summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ DEPLOYMENT COMPLETED SUCCESSFULLY!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎯 Cluster:     ${{ steps.vars.outputs.ecs_cluster }}"
+          echo "🚀 Service:     ${{ steps.vars.outputs.ecs_service }}"
+          echo "🏷️  Image Tag:   ${{ steps.vars.outputs.image_tag }}"
+          echo "🌐 Region:      ${{ env.AWS_REGION }}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "🔍 Monitor deployment:"
+          echo "https://console.aws.amazon.com/ecs/v2/clusters/${{ steps.vars.outputs.ecs_cluster }}/services/${{ steps.vars.outputs.ecs_service }}"
