@@ -67,4 +67,28 @@ export class PrismaJobRepository implements IJobRepository {
             throw error;
         }
     }
+
+    async findById(jobId: string): Promise<Job | null> {
+        try {
+            this.logger.info('Finding job by ID', { jobId });
+            const data = await this.prisma.job.findUnique({
+                where: { id: jobId },
+                include: {
+                    user: true,
+                },
+            });
+
+            if (!data) {
+                this.logger.info('Job not found', { jobId });
+                return null;
+            }
+
+            const result = PrismaJobMapper.toDomain(data);
+            this.logger.info('Job found', { jobId });
+            return result;
+        } catch (error) {
+            this.logger.error('Failed to find job by ID', error as Error, { jobId });
+            throw error;
+        }
+    }
 }

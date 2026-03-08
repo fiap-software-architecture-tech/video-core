@@ -12,6 +12,9 @@ const envSchema = z.object({
     AWS_BUCKET_NAME: z.string(),
     AWS_SQS_URL: z.string(),
     AWS_SQS_PROCESSED_URL: z.string().optional(),
+    
+    RESEND_API_KEY: z.string(),
+    EMAIL_FROM: z.string().email(),
 });
 
 export const env = envSchema.parse(process.env);

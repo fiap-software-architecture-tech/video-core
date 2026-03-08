@@ -22,5 +22,6 @@ export const TYPES = {
     TokenService: Symbol.for('TokenService'),
     StorageService: Symbol.for('StorageService'),
     QueueProviderService: Symbol.for('QueueProviderService'),
+    EmailService: Symbol.for('EmailService'),
     Logger: Symbol.for('Logger'),
 };
