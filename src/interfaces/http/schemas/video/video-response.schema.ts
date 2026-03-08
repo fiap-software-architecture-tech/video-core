@@ -8,6 +8,7 @@ export const videoResponseSchema = z.object({
     zipKey: z.string().nullable(),
     frameCount: z.number().nullable(),
     errorMessage: z.string().nullable(),
+    downloadUrl: z.string().url().nullable(),
     user: z.object({
         id: z.string().uuid(),
         email: z.string(),

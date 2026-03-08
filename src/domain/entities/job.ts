@@ -22,6 +22,7 @@ export class Job {
     public frameCount?: number;
     public errorMessage?: string;
     public user?: User;
+    public downloadUrl?: string;
 
     constructor(payload: JobPayload) {
         this.id = payload.id || crypto.randomUUID();

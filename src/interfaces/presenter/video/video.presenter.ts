@@ -11,6 +11,7 @@ export class VideoPresenter {
             zipKey: job.zipKey ?? null,
             frameCount: job.frameCount ?? null,
             errorMessage: job.errorMessage ?? null,
+            downloadUrl: job.downloadUrl ?? null,
             user: {
                 id: job.user?.id ?? '',
                 email: job.user?.email ?? '',

@@ -10,9 +10,13 @@ export class PrismaJobMapper {
     static toDomain(data: PrismaJobWithUser): Job {
         return new Job({
             id: data.id,
+            userId: data.userId,
             originalFileName: data.originalFileName,
             originalVideoKey: data.originalVideoKey,
             status: data.status,
+            zipKey: data.zipKey || undefined,
+            frameCount: data.frameCount || undefined,
+            errorMessage: data.errorMessage || undefined,
             user: data.user,
         } as JobPayload);
     }

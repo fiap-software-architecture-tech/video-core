@@ -1,4 +1,5 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { inject, injectable } from 'inversify';
 
 import { StorageDTO } from '#/domain/services/dto/storage.dto';
@@ -30,5 +31,16 @@ export class S3StorageService implements IStorageService {
             }),
         );
         this.logger.info('File uploaded to S3', { key: request.key });
+    }
+
+    async getSignedUrl(key: string, expiresIn: number = 3600): Promise<string> {
+        this.logger.info('Generating signed URL for S3 object', { key, expiresIn });
+        const command = new GetObjectCommand({
+            Bucket: env.AWS_BUCKET_NAME,
+            Key: key,
+        });
+        const url = await getSignedUrl(this.s3Client, command, { expiresIn });
+        this.logger.info('Signed URL generated', { key });
+        return url;
     }
 }
