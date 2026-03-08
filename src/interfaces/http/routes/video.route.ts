@@ -34,7 +34,9 @@ export const videoRoute = (app: FastifyInstance) => {
     });
 
     app.get<{ Querystring: VideoQueryRequest }>('/', videoListSchema, async (req, reply) => {
-        const videos = await controller.list(req.query);
+        const { id: userId } = req.user as { id: string };
+        const query = { ...req.query, userId };
+        const videos = await controller.list(query);
         return reply.status(StatusCodes.OK).send(videos);
     });
 };

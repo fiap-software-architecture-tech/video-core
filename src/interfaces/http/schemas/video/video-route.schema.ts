@@ -20,7 +20,8 @@ export const videoUploadSchema = {
 export const videoListSchema = {
     schema: {
         tags: ['Video'],
-        summary: 'Listagem de vídeos',
+        summary: 'Listagem de vídeos do usuário logado',
+        description: 'Retorna apenas os vídeos enviados pelo usuário autenticado',
         query: videoQueryRequestSchema,
         response: {
             200: z.array(videoResponseSchema),

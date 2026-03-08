@@ -40,6 +40,7 @@ export class PrismaJobRepository implements IJobRepository {
         const data = await this.prisma.job.findMany({
             where: {
                 ...(query.status ? { status: query.status.toUpperCase() as JobStatus } : {}),
+                ...(query.userId ? { userId: query.userId } : {}),
             },
             include: {
                 user: true,

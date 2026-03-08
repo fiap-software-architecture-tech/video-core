@@ -17,6 +17,7 @@ export const videoUploadRequestSchema = z.object({
 
 export const videoQueryRequestSchema = z.object({
     status: z.enum(['processing', 'done', 'error']).optional(),
+    userId: z.string().uuid().optional(),
 });
 
 export type VideoUploadRequest = z.infer<typeof videoUploadRequestSchema>;
