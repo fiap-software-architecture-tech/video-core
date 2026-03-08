@@ -48,4 +48,23 @@ export class PrismaJobRepository implements IJobRepository {
         this.logger.info('Jobs retrieved from database', { count: data.length });
         return data.map(item => PrismaJobMapper.toDomain(item));
     }
+
+    async update(jobId: string, data: Partial<Job>): Promise<Job> {
+        try {
+            this.logger.info('Updating job in database', { jobId, data });
+            const updated = await this.prisma.job.update({
+                where: { id: jobId },
+                data: PrismaJobMapper.toUpdate(data),
+                include: {
+                    user: true,
+                },
+            });
+            const result = PrismaJobMapper.toDomain(updated);
+            this.logger.info('Job updated in database', { jobId });
+            return result;
+        } catch (error) {
+            this.logger.error('Failed to update job in database', error as Error, { jobId });
+            throw error;
+        }
+    }
 }

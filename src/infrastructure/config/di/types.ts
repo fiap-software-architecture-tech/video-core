@@ -11,6 +11,7 @@ export const TYPES = {
     LoginUseCase: Symbol.for('LoginUseCase'),
     VideoUploadUseCase: Symbol.for('VideoUploadUseCase'),
     VideoListUseCase: Symbol.for('VideoListUseCase'),
+    ProcessVideoEventUseCase: Symbol.for('ProcessVideoEventUseCase'),
 
     // Controllers
     AuthController: Symbol.for('AuthController'),

@@ -26,4 +26,13 @@ export class PrismaJobMapper {
             },
         };
     }
+
+    static toUpdate(data: Partial<Job>): Prisma.JobUpdateInput {
+        return {
+            ...(data.status ? { status: data.status as any } : {}),
+            ...(data.zipKey ? { zipKey: data.zipKey } : {}),
+            ...(data.frameCount !== undefined ? { frameCount: data.frameCount } : {}),
+            ...(data.errorMessage !== undefined ? { errorMessage: data.errorMessage } : {}),
+        };
+    }
 }
