@@ -137,6 +137,88 @@ Este repositório possui workflow automatizado para build e deploy no AWS ECS.
 - [DEPLOYMENT.md](DEPLOYMENT.md) - Guia completo de deployment
 - [scripts/README.md](scripts/README.md) - Documentação dos scripts de deploy
 
+## 🚀 Funcionalidades Essenciais
+
+### ⚡ Processamento Concorrente
+- **Múltiplos vídeos simultâneos:** Arquitetura com SQS + ECS Fargate permite processamento paralelo
+- **Escalabilidade automática:** Sistema escala horizontalmente conforme demanda
+- **Não perde requisições:** SQS garante persistência das mensagens mesmo em picos de carga
+
+### 🔐 Autenticação e Segurança
+- **Proteção por usuário e senha:** Login com JWT + bcrypt
+- **Tokens seguros:** Expiração configurável e refresh tokens
+
+### 📋 Acompanhamento de Processamento
+- **Status em tempo real:** PROCESSING → DONE → ERROR
+- **Listagem por usuário:** Cada usuário vê apenas seus vídeos
+- **Histórico completo:** Todos os jobs permanecem registrados
+
+### 📧 Notificações Automáticas
+- **Email em caso de erro:** Notificação HTML profissional quando falha o processamento
+- **Detalhes do erro:** Informações específicas para ajudar o usuário
+- **Template customizado:** Design profissional com branding
+
+## 🧪 Testes e Qualidade
+
+### 📊 Estratégia de Testes
+- **Testes Unitários:** Use cases, repositories, services
+- **Testes de Integração:** Controllers, APIs, fluxos completos
+- **Mock Services:** Isolamento de dependências externas
+- **Coverage:** Meta de 90%+ cobertura de código
+
+### 🔧 Executar Testes
+```bash
+# Rodar todos os testes
+npm test
+
+# Modo watch (desenvolvimento)
+npm run test:watch
+
+# Coverage report
+npm run test:coverage
+```
+
+### 📋 Qualidade de Código
+- **ESLint + Prettier:** Padronização e formatação automática
+- **TypeScript:** Tipagem forte e segurança
+- **Arquitetura Limpa:** Separação clara de responsabilidades
+- **DI Container:** Inversify para gerenciamento de dependências
+
+## 🔄 CI/CD Pipeline
+
+### 🚀 Workflows Automatizados
+- **Build & Test:** `.github/workflows/build-and-test.yml`
+  - Node.js setup
+  - Install dependencies
+  - Run lint + tests
+  - Build application
+
+- **Deploy:** `.github/workflows/deploy-app.yml`
+  - Docker build & push (ECR)
+  - Deploy automático no ECS
+  - Trigger: push para main
+
+### ⚙️ Configuração CI/CD
+```bash
+# Secrets necessários no GitHub
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_SESSION_TOKEN
+
+# Variáveis do repositório
+ECR_REPOSITORY_URL
+ECR_REPOSITORY_NAME
+ECS_CLUSTER_NAME
+ECS_SERVICE_NAME
+```
+
+### 📦 Pipeline em Ação
+1. **Push para main** → Trigger automático
+2. **Build & Test** → Validação de qualidade
+3. **Docker Image** → Build e push ECR
+4. **ECS Deploy** → Atualização zero-downtime
+5. **Health Check** → Monitoramento pós-deploy
+
 ## 🏗️ Arquitetura
 
 Diagramas da arquitetura do sistema:
