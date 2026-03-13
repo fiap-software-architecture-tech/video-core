@@ -103,7 +103,7 @@ Este repositório possui workflow automatizado para build e deploy no AWS ECS.
    - `ECR_REPOSITORY_NAME`
    - `ECS_CLUSTER_NAME`
    - `ECS_SERVICE_NAME`
-   
+
    *(Obtenha estes valores do output do [video-infra deployment](https://github.com/fiap-software-architecture-tech/video-infra))*
 
 3. **Deploy automático**: Push para `main` faz deploy automaticamente
@@ -136,3 +136,14 @@ Este repositório possui workflow automatizado para build e deploy no AWS ECS.
 
 - [DEPLOYMENT.md](DEPLOYMENT.md) - Guia completo de deployment
 - [scripts/README.md](scripts/README.md) - Documentação dos scripts de deploy
+
+## 🏗️ Arquitetura
+
+Diagramas da arquitetura do sistema:
+
+- **Arquitetura Completa** - Visão geral de todos os componentes
+  - [docs/Draw_arch_full.jpeg](docs/Draw_arch_full.jpeg)
+- **Arquitetura Detalhada** - Detalhes dos componentes e fluxos
+  - [docs/Draw_arch_detail.jpeg](docs/Draw_arch_detail.jpeg)
+- **Arquitetura de Login** - Fluxo de autenticação
+  - [docs/Draw_arch_login.jpeg](docs/Draw_arch_login.jpeg)
