@@ -1,0 +1,20 @@
+import { z } from 'zod';
+
+const envSchema = z.object({
+    NODE_ENV: z.enum(['dev', 'hml', 'prd']).default('dev'),
+    PORT: z.coerce.number().default(3000),
+
+    JWT_SECRET: z.string(),
+    JWT_EXPIRES_IN: z.string(),
+
+    AWS_REGION: z.string(),
+    AWS_ENDPOINT: z.string(),
+    AWS_BUCKET_NAME: z.string(),
+    AWS_SQS_URL: z.string(),
+    AWS_SQS_PROCESSED_URL: z.string().optional(),
+    
+    RESEND_API_KEY: z.string(),
+    EMAIL_FROM: z.string().email(),
+});
+
+export const env = envSchema.parse(process.env);

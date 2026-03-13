@@ -1,0 +1,71 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist
+build
+.next
+out
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage
+.nyc_output
+*.test.ts
+*.spec.ts
+__tests__
+__mocks__
+
+# Documentation
+README.md
+docs/
+*.md
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+# Note: docker-entrypoint.sh is NOT ignored (needed for startup migrations)
+
+# Localstack
+localstack-init/
+
+# Terraform
+terraform/
+*.tf
+*.tfstate
+*.tfvars
+
+# Misc
+temp/
+tmp/
+logs/
+uploads/
+outputs/
